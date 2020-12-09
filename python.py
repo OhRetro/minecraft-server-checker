@@ -1,7 +1,7 @@
 import time
 import ctypes
 ctypes.windll.kernel32.SetConsoleTitleW('python')
-print('python')
+print('python.')
 py = input()
 if py == 'python':
     print('python')
