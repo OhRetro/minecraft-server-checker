@@ -1,5 +1,5 @@
 #Minecraft Server Checker
-#Versão:1.1
+#Versão:1.2
 
 from mcstatus import MinecraftServer
 from PyQt5.QtWidgets import QMainWindow, QWidget, QApplication, QPushButton, QTextEdit, QLineEdit, QAction, QMessageBox
@@ -47,6 +47,7 @@ class MinecraftServerChecker(QWidget):
                 gui.Players_display.setText(str(status.players.online) + ' / ' + str(status.players.max))
                 gui.Ping_display.setText(str(status.latency) + 'ms')
                 gui.ServerSoftware_display.setText(str(status.version.name))
+                gui.ServerMOTD_display.setText(str(status.description))
 
             #IP ERROR-----------------------------------------------------------
             except socket.timeout:
@@ -60,7 +61,20 @@ class MinecraftServerChecker(QWidget):
                 error.setWindowTitle('Invalid IP')
                 error.setText('The Server IP was invalid.')
                 error.exec_()
-                return
+
+            except ConnectionRefusedError:
+                reset()
+                if 'localhost' in ip:
+                    error = QMessageBox()
+                    error.setWindowTitle('Cannot connect to localhost')
+                    error.setText("You can't connect to localhost.")
+                    error.exec_()
+
+                else:
+                    error = QMessageBox()
+                    error.setWindowTitle('Connection Refused')
+                    error.setText('The connection have been refused by the server.')
+                    error.exec_()
 
 #-------------------------------------------------------------------------------
 #Reset--------------------------------------------------------------------------
@@ -70,6 +84,7 @@ class MinecraftServerChecker(QWidget):
             gui.Players_display.setText('')
             gui.Ping_display.setText('')
             gui.ServerSoftware_display.setText('')
+            gui.ServerMOTD_display.setText('')
 
 #-------------------------------------------------------------------------------
 #Minecraft Server Checker-------------------------------------------------------
