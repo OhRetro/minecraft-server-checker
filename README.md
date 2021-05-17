@@ -6,12 +6,12 @@ Just a simple Minecraft Server Checker
 _not released yet_
 
 * Release 1.2:
-  * -MOTD added,
-  * -an "connection refused" handler,
-  * -"cannot connect to localhost" handler.
+  * MOTD added,
+  * an "connection refused" handler,
+  * "cannot connect to localhost" handler.
 
 * Release 1.1:
-  * -An interface have been added.
+  * An interface have been added.
 
 * Release 1.0:
-  * -First Version
+  * First Version
