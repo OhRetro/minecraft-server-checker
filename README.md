@@ -2,7 +2,7 @@
 ## Download [here](https://github.com/OhRetro/Minecraft-Server-Checker/releases).
 Just a simple Minecraft Server Checker
 
-* Release 1.3: _not released yet_
+* Release 1.3:
   * version indicator have been added
   * about window have been added
   * "cannot connect to localhost" handler have been removed
