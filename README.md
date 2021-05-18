@@ -4,7 +4,7 @@ Just a simple Minecraft Server Checker
 
 * Release 1.3:
   * version indicator have been added
-  * about window have been added
+  * "about" window have been added
   * "cannot connect to localhost" handler have been removed
   * some typos fixes
 
