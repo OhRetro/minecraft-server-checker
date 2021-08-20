@@ -1,7 +1,8 @@
 # Minecraft Server Checker
 ## [Download](https://github.com/OhRetro/Minecraft-Server-Checker/releases).
 ## [Download Legacy Version](https://github.com/OhRetro/Minecraft-Server-Checker/releases/tag/Legacy).
-Its just a simple Minecraft Server Checker
+
+Its just a simple Minecraft Server Checker.
 
 New v2.0!
 
