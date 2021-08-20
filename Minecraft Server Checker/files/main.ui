@@ -6,19 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
+    <width>430</width>
     <height>330</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
-    <width>400</width>
+    <width>430</width>
     <height>330</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>400</width>
+    <width>430</width>
     <height>330</height>
    </size>
   </property>
@@ -38,7 +38,7 @@
   <widget class="QFrame" name="MainFrame">
    <property name="geometry">
     <rect>
-     <x>10</x>
+     <x>40</x>
      <y>10</y>
      <width>381</width>
      <height>311</height>
@@ -328,7 +328,7 @@ color: rgb(255, 255, 255);
      </rect>
     </property>
     <property name="text">
-     <string>v1.3</string>
+     <string>v0</string>
     </property>
    </widget>
    <widget class="QPushButton" name="MinecraftLogo_button">
@@ -347,7 +347,7 @@ color: rgb(255, 255, 255);
      <number>-1</number>
     </property>
     <property name="styleSheet">
-     <string notr="true">color: rgb(0, 0, 0);</string>
+     <string notr="true">background-color: rgb(59, 59, 59);</string>
     </property>
     <property name="text">
      <string/>
@@ -363,6 +363,25 @@ color: rgb(255, 255, 255);
      </size>
     </property>
    </widget>
+  </widget>
+  <widget class="QFrame" name="ColorSideFrame">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>-20</y>
+     <width>31</width>
+     <height>431</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color: rgb(170, 255, 0);</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
   </widget>
  </widget>
  <resources/>
