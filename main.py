@@ -1,12 +1,13 @@
+#!/usr/bin/python3
 #Minecraft Server Checker
-_version = "3.0"
+_version = "2.1"
 
+
+#Imports
 try:
     from mcstatus import MinecraftServer
     from PyQt5.QtWidgets import QWidget, QApplication, QMessageBox
     from PyQt5 import uic
-    from socket import gaierror as InvalidMinecraftServerIp, timeout as NoResponse
-    import sys
     import webbrowser
     
 except ImportError as missing_package:
@@ -14,28 +15,21 @@ except ImportError as missing_package:
     print(f"{missing_package} is missing.\nPlease install {missing_package}.\n")
     exit(0)
 
-#-------------------------------------------------------------------------------
-#Minecraft Server Checker-------------------------------------------------------
+finally:
+    from socket import gaierror as InvalidMinecraftServerIp, timeout as NoResponse
+    import sys
+
+#Minecraft server Checker
 class MinecraftServerChecker(QWidget):
     def __init__(self):
         super().__init__()
-        gui = uic.loadUi("files/main.ui", self)
+        gui = uic.loadUi("./main.ui", self)
         gui.Version_text.setText(f"v{_version}")
 
-        #Check It Up
-        def check_it_up():
+        #Check Server
+        def check_server():
             try:
-                server_ip = gui.ServerIP_display.text()
-
-                if not server_ip:
-                    reset()
-                    error_message = QMessageBox()
-                    error_message.setWindowTitle("Server IP Empty")
-                    error_message.setText("The Server IP field was empty.")
-                    error_message.exec_()
-                    return
-
-                else:
+                if server_ip := gui.ServerIP_display.text():
                     gui.Check_button.setText("Refresh")
                     server = MinecraftServer.lookup(server_ip)
                     status = server.status()
@@ -45,19 +39,30 @@ class MinecraftServerChecker(QWidget):
                     gui.ServerSoftware_display.setText(str(status.version.name))
                     gui.ServerMOTD_display.setText(str(status.description))
 
+                else:
+                    reset()
+                    error_message = QMessageBox()
+                    error_message.setWindowTitle("Server IP Empty")
+                    error_message.setText("The Server IP field was empty.")
+                    error_message.exec_()
+                    return
+
+            #No Response
             except NoResponse:
                 reset()
                 gui.Check_button.setText("Refresh")
                 gui.Status_display.setText("Offline")
 
+            #Invalid IP Address
             except InvalidMinecraftServerIp:
                 reset()
                 error_message = QMessageBox()
                 error_message.setWindowTitle("Invalid Minecraft Server IP")
-                error_message.setText("The Server IP wasn't a Minecraft Server IP.")
+                error_message.setText("The Server IP wasn't a Minecraft Server IP or was Invalid.")
                 error_message.exec_()
                 return
 
+            #Connection Refused
             except ConnectionRefusedError:
                 reset()
                 error_message = QMessageBox()
@@ -86,13 +91,13 @@ class MinecraftServerChecker(QWidget):
             if openlink == QMessageBox.Yes:
                 webbrowser.open("https://github.com/OhRetro/Minecraft-Server-Checker")
 
-        gui.Check_button.clicked.connect(check_it_up)
+        gui.Check_button.clicked.connect(check_server)
         gui.MinecraftLogo_button.clicked.connect(about)
 
         gui.show()
 
-#-------------------------------------------------------------------------------
-#Run----------------------------------------------------------------------------
+
+#Run
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MinecraftServerChecker()
