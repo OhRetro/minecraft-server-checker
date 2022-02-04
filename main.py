@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 #Minecraft Server Checker
-_version = "2.1"
-
+_version = "2.1.1"
 
 #Imports
 try:
@@ -30,72 +29,77 @@ class MinecraftServerChecker(QWidget):
         def check_server():
             try:
                 if server_ip := gui.ServerIP_display.text():
-                    gui.Check_button.setText("Refresh")
+                    set_gui_text("Refresh")
+                    
                     server = MinecraftServer.lookup(server_ip)
                     status = server.status()
-                    gui.Status_display.setText("Online")
-                    gui.Players_display.setText(f"{status.players.online}/{status.players.max}")
-                    gui.Ping_display.setText(f"{round(status.latency)} ms")
-                    gui.ServerSoftware_display.setText(str(status.version.name))
-                    gui.ServerMOTD_display.setText(str(status.description))
+                    
+                    set_gui_text(check_button="Refresh",
+                                 status="Online",
+                                 players=f"{status.players.online}/{status.players.max}",
+                                 ping=f"{round(status.latency)} ms",
+                                 server_software=str(status.version.name),
+                                 server_motd=str(status.description)
+                                 )
 
                 else:
                     reset()
-                    error_message = QMessageBox()
-                    error_message.setWindowTitle("Server IP Empty")
-                    error_message.setText("The Server IP field was empty.")
-                    error_message.exec_()
-                    return
+                    display_message("Server IP field Empty", "The Server IP field is empty")
 
             #No Response
             except NoResponse:
                 reset()
-                gui.Check_button.setText("Refresh")
-                gui.Status_display.setText("Offline")
+                set_gui_text("Refresh", "Offline")
 
             #Invalid IP Address
             except InvalidMinecraftServerIp:
                 reset()
-                error_message = QMessageBox()
-                error_message.setWindowTitle("Invalid Minecraft Server IP")
-                error_message.setText("The Server IP wasn't a Minecraft Server IP or was Invalid.")
-                error_message.exec_()
-                return
+                display_message("Invalid Minecraft Server IP", "The Server IP wasn't a Minecraft Server IP or was Invalid.")
 
             #Connection Refused
             except ConnectionRefusedError:
                 reset()
-                error_message = QMessageBox()
-                error_message.setWindowTitle("Connection Refused")
-                error_message.setText("The connection have been refused by the server.")
-                error_message.exec_()
-                return
-
+                display_message("Connection Refused", "The connection have been refused by the server.")
+                
         #Reset
         def reset():
-            gui.Check_button.setText("Check")
-            gui.Status_display.setText("")
-            gui.Players_display.setText("")
-            gui.Ping_display.setText("")
-            gui.ServerSoftware_display.setText("")
-            gui.ServerMOTD_display.setText("")
+            set_gui_text("Check")
+            
+        #Display Message
+        def display_message(title:str, message:str, standard_buttons=None):
+            display = QMessageBox()
+            display.setWindowTitle(title)
+            display.setText(message)
+
+            if standard_buttons is not None:
+                display.setStandardButtons(standard_buttons)
+                return display.exec_()
+            else:   
+                display.exec_()
+                return
+
+        #Set GUI Text
+        def set_gui_text(check_button="", status="", players="", ping="", server_software="", server_motd=""):
+            gui.Check_button.setText(check_button)
+            gui.Status_display.setText(status)
+            gui.Players_display.setText(players)
+            gui.Ping_display.setText(ping)
+            gui.ServerSoftware_display.setText(server_software)
+            gui.ServerMOTD_display.setText(server_motd)
 
         #About
         def about():
-            about = QMessageBox()
-            about.setWindowTitle("Created by OhRetro_")
-            about.setText(f"Minecraft Version Checker v{_version}\nDo you want to open the program's repository on github?")
-            about.setStandardButtons(QMessageBox.Yes | QMessageBox.No)
-            openlink = about.exec_()
+            chosen_response = display_message("Created by OhRetro", 
+                                              f"Minecraft Version Checker v{_version}\nDo you want to open the program's repository on github?", 
+                                              QMessageBox.Yes | QMessageBox.No)
 
-            if openlink == QMessageBox.Yes:
+            if chosen_response == QMessageBox.Yes:
                 webbrowser.open("https://github.com/OhRetro/Minecraft-Server-Checker")
 
         gui.Check_button.clicked.connect(check_server)
         gui.MinecraftLogo_button.clicked.connect(about)
 
         gui.show()
-
 
 #Run
 if __name__ == "__main__":
