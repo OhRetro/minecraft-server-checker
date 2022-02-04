@@ -71,7 +71,7 @@ class MinecraftServerChecker(QWidget):
             display.setWindowTitle(title)
             display.setText(message)
 
-            if standard_buttons != None:
+            if standard_buttons is not None:
                 display.setStandardButtons(standard_buttons)
                 return display.exec_()
             else:   
