@@ -118,7 +118,7 @@ if __name__ == "__main__":
         window = MinecraftServerChecker() 
         
     except Exception as error:
-        PyQt.display_message("Error", "An error has occurred", "Something went wrong", str(error), Icon.Critical)
+        PyQt.display_message("Error", "An error has occurred", "Something went wrong, Press 'Show Details' for more information", str(error), Icon.Critical)
 
     finally:
         app.exec()
