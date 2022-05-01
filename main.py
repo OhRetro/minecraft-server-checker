@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 #Minecraft Server Checker
-_version = ["2.1.2", "Dev"]
+_version = ["2.1.3", "Stable"]
 
 #Imports
 try:
