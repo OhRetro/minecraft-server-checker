@@ -8,19 +8,19 @@ try:
     from PyQt5 import uic
     from PyQt5.QtWidgets import QApplication, QWidget
     
+    PyQt = PyQt()
     Icon = PyQt.Icon
     Button = PyQt.Button
 
-except ImportError as missing_package:
-    print(missing_package)
-    exit(1)
+except ImportError as error:
+    raise error
 
 finally:
     from sys import argv as sys_argv
     from socket import gaierror as InvalidMinecraftServerIp
     from socket import timeout as NoResponse
     from webbrowser import open as wb_open
-    from requests import json as re_json
+    from requests import get as re_get
 
 #Minecraft Server Checker
 class MinecraftServerChecker(QWidget):
@@ -59,7 +59,7 @@ class MinecraftServerChecker(QWidget):
                     PyQt.displaymessage(
                         title="Server IP field Empty", 
                         message="The Server IP field is empty",
-                        icon=Icon.Information)
+                        icon=Icon["Information"])
 
             #No Response
             except NoResponse:
@@ -75,7 +75,7 @@ class MinecraftServerChecker(QWidget):
                 PyQt.displaymessage(
                     title="Invalid Minecraft Server IP",
                     message="The Server IP wasn't a Minecraft Server IP or was Invalid.",
-                    icon=Icon.Information)
+                    icon=Icon["Information"])
 
             #Connection Refused
             except ConnectionRefusedError:
@@ -83,15 +83,15 @@ class MinecraftServerChecker(QWidget):
                 PyQt.displaymessage(
                     title="Connection Refused",
                     message="The connection have been refused by the server.",
-                    icon=Icon.Information)
+                    icon=Icon["Information"])
 
             #Others
             except Exception as error:
                 reset()
                 PyQt.displaymessage(title="Error",
                                      message="An error has occurred",
-                                     detailed_message=str(error),
-                                     icon=Icon.Warning)
+                                     detailed=str(error),
+                                     icon=Icon["Warning"])
 
         #Reset
         def reset():
@@ -108,36 +108,38 @@ class MinecraftServerChecker(QWidget):
         gui.MinecraftLogo_button.clicked.connect(self.about)
 
         gui.show()
-        self.checkupdates()
+        self.checkupdates(gui)
 
     #About
     def about(self):
         response = PyQt.displaymessage(
             title="Created by OhRetro",
             message=f"Minecraft Version Checker v{_version[0]} | {_version[1]} | Version Code: {_version[2]}", 
-            informative_message="Do you want to open the program's repository on github?",
-            icon=Icon.Question,
-            buttons= (Button.Yes | Button.No))
+            informative="Do you want to open the program's repository on github?",
+            icon=Icon["Question"],
+            buttons= (Button["Yes"] | Button["No"]))
 
-        if response == Button.Yes:
+        if response == Button["Yes"]:
             wb_open("https://github.com/OhRetro/Minecraft-Server-Checker")
 
     #Check for updates
-    def checkupdates(self):
-        latest_version =  int(re_json("https://api.github.com/repos/OhRetro/Minecraft-Server-Checker/releases/latest")["tag_name"].replace("v", "").replace(".", ""))
+    def checkupdates(self, gui):
+        response = re_get("https://api.github.com/repos/OhRetro/Minecraft-Server-Checker/releases/latest")
+        tag_name = response.json()["tag_name"]
+        latest_version =  int(tag_name.replace("v", "").replace(".", ""))
         
         if _version[2] < latest_version:
+            PyQt.settext(gui, Update_text=f"Update Available | Newer Version: {tag_name}")
             response = PyQt.displaymessage(
                 title="Update Available",
                 message="An update is available, do you want to download it?",
-                informative_message="You can download it from the program's repository on github.",
-                icon=Icon.Information,
-                buttons= (Button.Yes | Button.No))
+                informative="You can download it from the program's repository on github.",
+                icon=Icon["Information"],
+                buttons= Button["Yes"] | Button["No"])
 
-            if response == Button.Yes:
+            if response == Button["Yes"]:
                 wb_open("https://github.com/OhRetro/Minecraft-Server-Checker/releases/latest")
-        
-        
+            
 if __name__ == "__main__":
     try:
         app = QApplication(sys_argv)
@@ -145,8 +147,4 @@ if __name__ == "__main__":
         app.exec()
         
     except Exception as error:
-        PyQt.displaymessage(title="Error", 
-                             message="An error has occurred", 
-                             informative_message="Something went wrong", 
-                             detailed_message=str(error), 
-                             icon=Icon.Critical)
+        raise error
