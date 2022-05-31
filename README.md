@@ -3,7 +3,7 @@
 ## [Download Legacy Version](https://github.com/OhRetro/Minecraft-Server-Checker/releases/tag/Legacy).
 
 Its just a simple Minecraft Server Checker. <br/>
-Version: v2.1.2
+Version: v2.1.3
 
 # Installing
 
