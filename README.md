@@ -1,10 +1,9 @@
-# Minecraft Server Checker
+# Minecraft (Java) Server Checker
 ## [Download](https://github.com/OhRetro/Minecraft-Server-Checker/archive/refs/heads/stable-stage.zip).
 ## [Download Legacy Version](https://github.com/OhRetro/Minecraft-Server-Checker/releases/tag/Legacy).
 
 Its just a simple Minecraft Server Checker. <br/>
-It won't be a .exe version of it anymore. <br/><br/>
-Version: v2.1.2
+Version: v2.1.3
 
 # Installing
 
