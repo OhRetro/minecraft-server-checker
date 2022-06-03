@@ -88,10 +88,11 @@ class MinecraftServerChecker(QWidget):
             #Others
             except Exception as error:
                 reset()
-                PyQt.displaymessage(title="Error",
-                                     message="An error has occurred",
-                                     detailed=str(error),
-                                     icon=Icon["Warning"])
+                PyQt.displaymessage(
+                    title="Error",
+                    message="An error has occurred",
+                    detailed=str(error),
+                    icon=Icon["Warning"])
 
         #Reset
         def reset():
