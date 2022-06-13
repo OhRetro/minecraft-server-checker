@@ -1,5 +1,5 @@
 #Minecraft Server Checker
-_version = ["2.1.3", "Stable", 213]
+_version = ["2.1.4", "Stable", 214]
 
 #Imports
 try:
@@ -21,6 +21,7 @@ finally:
     from socket import timeout as NoResponse
     from webbrowser import open as wb_open
     from requests import get as re_get
+    from requests.exceptions import ConnectionError
 
 #Minecraft Server Checker
 class MinecraftServerChecker(QWidget):
@@ -109,7 +110,16 @@ class MinecraftServerChecker(QWidget):
         gui.MinecraftLogo_button.clicked.connect(self.about)
 
         gui.show()
-        self.checkupdates(gui)
+        try:
+            self.checkupdates(gui)
+        except ConnectionError as e:
+            PyQt.displaymessage(
+                title="No Internet",
+                message="Looks like you're without internet!",
+                detailed=str(e),
+                icon=Icon["Critical"],
+                buttons=(Button["Ok"])
+            )
 
     #About
     def about(self):
