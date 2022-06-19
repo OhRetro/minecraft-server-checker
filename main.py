@@ -27,91 +27,18 @@ finally:
 class MinecraftServerChecker(QWidget):
     def __init__(self):
         super().__init__()
-        gui = uic.loadUi("./main.ui", self)
-        gui.Version_text.setText(f"v{_version[0]}")
+        self.gui = uic.loadUi("./main.ui", self)
+        PyQt.settext(
+            self.gui,
+            Version_text=f"v{_version[0]}")
+
+        self.gui.Check_button.clicked.connect(self.check_server)
+        self.gui.MinecraftLogo_button.clicked.connect(self.about)
+
+        self.gui.show()
         
-        format_code = ["§4", "§c", "§6", "§e", "§2", "§a", "§b", "§3", "§1", "§9", "§5", "§7", "§8", "§d", "§f", "§0", "§k", "§l", "§m", "§n", "§o", "§r"]
-
-        #Check Server
-        def check_server():
-            try:
-                if server_ip := gui.ServerIP_display.text():
-                    PyQt.settext(gui, Check_button="Refresh")
-
-                    server = JavaServer.lookup(server_ip)
-                    status = server.status()
-                    
-                    status_desc = str(status.description)
-                    for _ in format_code:
-                        status_desc = str(status_desc).replace(_, "")
-                    status_desc = status_desc.replace("  ", "")
-
-                    PyQt.settext(
-                        gui,
-                        Check_button="Refresh",
-                        Status_display="Online",
-                        Players_display=f"{status.players.online}/{status.players.max}",
-                        Ping_display=f"{round(status.latency)} ms",
-                        ServerSoftware_display=str(status.version.name),
-                        ServerMOTD_display=status_desc)
-
-                else:
-                    reset()
-                    PyQt.displaymessage(
-                        title="Server IP field Empty", 
-                        message="The Server IP field is empty",
-                        icon=Icon["Information"])
-
-            #No Response
-            except NoResponse:
-                reset()
-                PyQt.settext(
-                    gui, 
-                    Check_button="Refresh",
-                    Status_display="Offline")
-
-            #Invalid IP Address
-            except InvalidMinecraftServerIp:
-                reset()
-                PyQt.displaymessage(
-                    title="Invalid Minecraft Server IP",
-                    message="The Server IP wasn't a Minecraft Server IP or was Invalid.",
-                    icon=Icon["Information"])
-
-            #Connection Refused
-            except ConnectionRefusedError:
-                reset()
-                PyQt.displaymessage(
-                    title="Connection Refused",
-                    message="The connection have been refused by the server.",
-                    icon=Icon["Information"])
-
-            #Others
-            except Exception as error:
-                reset()
-                PyQt.displaymessage(
-                    title="Error",
-                    message="An error has occurred",
-                    detailed=str(error),
-                    icon=Icon["Warning"])
-
-        #Reset
-        def reset():
-            PyQt.settext(
-                gui,
-                Check_button="Check",
-                Status_display="",
-                Players_display="",
-                Ping_display="",
-                ServerSoftware_display="",
-                ServerMOTD_display="")
-
-        gui.Check_button.clicked.connect(check_server)
-        gui.MinecraftLogo_button.clicked.connect(self.about)
-
-        gui.show()
         try:
-            self.checkupdates(gui)
+            self.checkupdates()
         except ConnectionError as e:
             PyQt.displaymessage(
                 title="No Internet",
@@ -120,7 +47,85 @@ class MinecraftServerChecker(QWidget):
                 icon=Icon["Critical"],
                 buttons=(Button["Ok"])
             )
+            
+    #Check Server
+    def check_server(self):
+        format_code = ["§4", "§c", "§6", "§e", "§2", "§a", "§b", "§3", "§1", "§9", "§5", "§7", "§8", "§d", "§f", "§0", "§k", "§l", "§m", "§n", "§o", "§r"]
+        
+        try:
+            if server_ip := self.gui.ServerIP_display.text():
+                PyQt.settext(self.gui, Check_button="Refresh")
 
+                server = JavaServer.lookup(server_ip)
+                status = server.status()
+                
+                print(status)
+                
+                status_desc = str(status.description)
+                for _ in format_code:
+                    status_desc = str(status_desc).replace(_, "")
+                status_desc = status_desc.replace("  ", "")
+
+                PyQt.settext(
+                    self.gui,
+                    Check_button="Refresh",
+                    Status_display="Online",
+                    Players_display=f"{status.players.online}/{status.players.max}",
+                    Ping_display=f"{round(status.latency)} ms",
+                    ServerSoftware_display=str(status.version.name),
+                    ServerMOTD_display=status_desc)
+
+            else:
+                self.reset()
+                PyQt.displaymessage(
+                    title="Server IP field Empty", 
+                    message="The Server IP field is empty",
+                    icon=Icon["Information"])
+
+        #No Response
+        except NoResponse:
+            self.reset()
+            PyQt.settext(
+                self.gui, 
+                Check_button="Refresh",
+                Status_display="Offline")
+
+        #Invalid IP Address
+        except InvalidMinecraftServerIp:
+            self.reset()
+            PyQt.displaymessage(
+                title="Invalid Minecraft Server IP",
+                message="The Server IP wasn't a Minecraft Server IP or was Invalid.",
+                icon=Icon["Information"])
+
+        #Connection Refused
+        except ConnectionRefusedError:
+            self.reset()
+            PyQt.displaymessage(
+                title="Connection Refused",
+                message="The connection have been refused by the server.",
+                icon=Icon["Information"])
+
+        #Others
+        except Exception as error:
+            self.reset()
+            PyQt.displaymessage(
+                title="Error",
+                message="An error has occurred",
+                detailed=str(error),
+                icon=Icon["Warning"])
+
+    #Reset
+    def reset(self):
+        PyQt.settext(
+            self.gui,
+            Check_button="Check",
+            Status_display="",
+            Players_display="",
+            Ping_display="",
+            ServerSoftware_display="",
+            ServerMOTD_display="")
+        
     #About
     def about(self):
         response = PyQt.displaymessage(
@@ -134,13 +139,13 @@ class MinecraftServerChecker(QWidget):
             wb_open("https://github.com/OhRetro/Minecraft-Server-Checker")
 
     #Check for updates
-    def checkupdates(self, gui):
+    def checkupdates(self):
         response = re_get("https://api.github.com/repos/OhRetro/Minecraft-Server-Checker/releases/latest")
         tag_name = response.json()["tag_name"]
         latest_version =  int(tag_name.replace("v", "").replace(".", ""))
         
         if _version[2] < latest_version:
-            PyQt.settext(gui, Update_text=f"Update Available | Newer Version: {tag_name}")
+            PyQt.settext(self.gui, Update_text=f"Update Available | Newer Version: {tag_name}")
             response = PyQt.displaymessage(
                 title="Update Available",
                 message="An update is available, do you want to download it?",
