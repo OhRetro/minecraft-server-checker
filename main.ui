@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>main</class>
- <widget class="QWidget" name="main">
+ <class>MAIN</class>
+ <widget class="QWidget" name="MAIN">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -27,7 +27,7 @@
   </property>
   <property name="windowIcon">
    <iconset>
-    <normaloff>Minecraft.png</normaloff>Minecraft.png</iconset>
+    <normaloff>mc_icon.png</normaloff>mc_icon.png</iconset>
   </property>
   <property name="toolTip">
    <string/>
@@ -35,7 +35,7 @@
   <property name="styleSheet">
    <string notr="true">background-color: rgb(23, 23, 23);</string>
   </property>
-  <widget class="QFrame" name="MainFrame">
+  <widget class="QFrame" name="MAIN_FRAME">
    <property name="geometry">
     <rect>
      <x>40</x>
@@ -57,7 +57,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
    <property name="frameShadow">
     <enum>QFrame::Raised</enum>
    </property>
-   <widget class="QFrame" name="Server_infos">
+   <widget class="QFrame" name="Server_INFO">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -67,7 +67,8 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">background-color: rgb(59, 59, 59);</string>
+     <string notr="true">background-color: rgb(59, 59, 59);
+</string>
     </property>
     <property name="frameShape">
      <enum>QFrame::StyledPanel</enum>
@@ -75,7 +76,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="ServerIP_text">
+    <widget class="QLabel" name="IP_TEXT">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -88,7 +89,7 @@ font: 8pt &quot;MS Shell Dlg 2&quot;;
       <string>Server IP:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="ServerIP_display">
+    <widget class="QLineEdit" name="IP_DISPLAY">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -111,13 +112,13 @@ color: rgb(0, 0, 0);</string>
       <string>Input Server IP here.</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="Check_button">
+    <widget class="QPushButton" name="Check_BUTTON">
      <property name="geometry">
       <rect>
-       <x>270</x>
+       <x>265</x>
        <y>20</y>
-       <width>81</width>
-       <height>21</height>
+       <width>80</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="mouseTracking">
@@ -130,25 +131,25 @@ color: rgb(0, 0, 0);</string>
       <string>Check</string>
      </property>
     </widget>
-    <widget class="QLabel" name="Ping_text">
+    <widget class="QLabel" name="Ping_TEXT">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>40</y>
-       <width>341</width>
-       <height>16</height>
+       <width>241</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
       <string>Ping:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="Ping_display">
+    <widget class="QLineEdit" name="Ping_DISPLAY">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>60</y>
-       <width>341</width>
+       <width>241</width>
        <height>20</height>
       </rect>
      </property>
@@ -160,25 +161,25 @@ color: rgb(0, 0, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="ServerSoftware_text">
+    <widget class="QLabel" name="Software_TEXT">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>80</y>
-       <width>341</width>
-       <height>21</height>
+       <width>241</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
-      <string>Server's Minecraft Version:</string>
+      <string>Server's MC Version:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="ServerSoftware_display">
+    <widget class="QLineEdit" name="Software_DISPLAY">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>100</y>
-       <width>341</width>
+       <width>241</width>
        <height>20</height>
       </rect>
      </property>
@@ -190,11 +191,11 @@ color: rgb(0, 0, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="Status_text">
+    <widget class="QLabel" name="Status_TEXT">
      <property name="geometry">
       <rect>
        <x>140</x>
-       <y>0</y>
+       <y>1</y>
        <width>121</width>
        <height>20</height>
       </rect>
@@ -203,12 +204,12 @@ color: rgb(0, 0, 0);</string>
       <string>Status:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="Status_display">
+    <widget class="QLineEdit" name="Status_DISPLAY">
      <property name="geometry">
       <rect>
        <x>140</x>
        <y>20</y>
-       <width>121</width>
+       <width>111</width>
        <height>20</height>
       </rect>
      </property>
@@ -220,20 +221,20 @@ color: rgb(0, 0, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
-    <widget class="QLabel" name="ServerMOTD_text">
+    <widget class="QLabel" name="MOTD_TEXT">
      <property name="geometry">
       <rect>
        <x>10</x>
        <y>120</y>
-       <width>341</width>
-       <height>21</height>
+       <width>241</width>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
       <string>MOTD:</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="ServerMOTD_display">
+    <widget class="QLineEdit" name="MOTD_DISPLAY">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -250,8 +251,40 @@ color: rgb(0, 0, 0);</string>
       <bool>true</bool>
      </property>
     </widget>
+    <widget class="QFrame" name="OPTIONS_FRAME">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>50</y>
+       <width>91</width>
+       <height>71</height>
+      </rect>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">background-color: rgb(34, 34, 34);</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::StyledPanel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QCheckBox" name="AutoUpdate_TOGGLE">
+      <property name="geometry">
+       <rect>
+        <x>5</x>
+        <y>10</y>
+        <width>80</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Auto Update</string>
+      </property>
+     </widget>
+    </widget>
    </widget>
-   <widget class="QFrame" name="Server_players">
+   <widget class="QFrame" name="Server_INFO_PLAYERS">
     <property name="geometry">
      <rect>
       <x>10</x>
@@ -269,20 +302,20 @@ color: rgb(0, 0, 0);</string>
     <property name="frameShadow">
      <enum>QFrame::Raised</enum>
     </property>
-    <widget class="QLabel" name="Players_text">
+    <widget class="QLabel" name="Players_TEXT">
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>0</y>
+       <y>1</y>
        <width>341</width>
-       <height>21</height>
+       <height>20</height>
       </rect>
      </property>
      <property name="text">
       <string>Players :</string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="Players_display">
+    <widget class="QLineEdit" name="Players_DISPLAY">
      <property name="geometry">
       <rect>
        <x>10</x>
@@ -300,10 +333,10 @@ color: rgb(0, 0, 0);</string>
      </property>
     </widget>
    </widget>
-   <widget class="QLabel" name="MinecraftServerChecker">
+   <widget class="QLabel" name="MCServerChecker">
     <property name="geometry">
      <rect>
-      <x>90</x>
+      <x>70</x>
       <y>270</y>
       <width>261</width>
       <height>21</height>
@@ -318,23 +351,23 @@ color: rgb(255, 255, 255);
      <string>Minecraft Server Checker</string>
     </property>
    </widget>
-   <widget class="QLabel" name="Version_text">
+   <widget class="QLabel" name="Version_TEXT">
     <property name="geometry">
      <rect>
-      <x>90</x>
-      <y>290</y>
-      <width>281</width>
+      <x>70</x>
+      <y>250</y>
+      <width>301</width>
       <height>20</height>
      </rect>
     </property>
     <property name="text">
-     <string>v0</string>
+     <string>v0.0.0.0</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="MinecraftLogo_button">
+   <widget class="QPushButton" name="About_BUTTON">
     <property name="geometry">
      <rect>
-      <x>30</x>
+      <x>10</x>
       <y>250</y>
       <width>50</width>
       <height>50</height>
@@ -354,7 +387,7 @@ color: rgb(255, 255, 255);
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>Minecraft.png</normaloff>Minecraft.png</iconset>
+      <normaloff>mc_icon.png</normaloff>mc_icon.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -363,21 +396,8 @@ color: rgb(255, 255, 255);
      </size>
     </property>
    </widget>
-   <widget class="QLabel" name="Update_text">
-    <property name="geometry">
-     <rect>
-      <x>90</x>
-      <y>250</y>
-      <width>221</width>
-      <height>20</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string/>
-    </property>
-   </widget>
   </widget>
-  <widget class="QFrame" name="ColorSideFrame">
+  <widget class="QFrame" name="COLORBARLEFT">
    <property name="geometry">
     <rect>
      <x>0</x>
