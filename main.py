@@ -1,5 +1,5 @@
 #Minecraft Server Checker
-VERSION = ["2.2", "Stable", 220]
+VERSION:list = [2.3, "Stable"]
 
 #Imports
 from sys import argv as sys_argv
@@ -17,8 +17,8 @@ try:
     from mcstatus import JavaServer
     from PyQt5 import uic
     from PyQt5.QtWidgets import QApplication, QWidget
-    from oreto_utils.pyqt5_utils import displaymessage as oup_displaymessage, settext as oup_settext
-    from oreto_utils.pyqt5_utils import bindbutton as oup_bindbutton, Icon as oup_Icon, Button as oup_Button
+    from pyqt5_utils import displaymessage as oup_displaymessage, settext as oup_settext
+    from pyqt5_utils import bindbutton as oup_bindbutton, Icon as oup_Icon, Button as oup_Button
 
 except ImportError:
     print(tb_format_exc())
@@ -221,7 +221,7 @@ class MCServerChecker(QWidget):
     def about(self):
         response = oup_displaymessage(
             title="About Minecraft Server Checker",
-            message=f"Minecraft Version Checker v{VERSION[0]} | {VERSION[1]} | Version Code: {VERSION[2]}; Created by OhRetro", 
+            message=f"Minecraft Version Checker v{VERSION[0]} | {VERSION[1]}; Created by OhRetro", 
             informative="Do you want to open the program's repository on github?",
             icon=oup_Icon["Question"],
             buttons= (oup_Button["Yes"] | oup_Button["No"]),
@@ -235,9 +235,9 @@ class MCServerChecker(QWidget):
     def checkupdates(self):
         response = re_get("https://api.github.com/repos/OhRetro/Minecraft-Server-Checker/releases/latest")
         tag_name = response.json()["tag_name"]
-        latest =  int(tag_name.replace("v", "").replace(".", ""))
+        latest =  int(tag_name.replace("v", ""))
         
-        if VERSION[2] < latest:
+        if VERSION[0] < latest:
             oup_settext(self.gui, Version_TEXT=f"v{VERSION[0]} | Update Available, Newer Version: {tag_name}")
             response = oup_displaymessage(
                 title="Update Available",
