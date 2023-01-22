@@ -131,43 +131,42 @@ class MCServerChecker(QWidget):
         try:
             self.server_ip = self.gui.IP_DISPLAY.text()
             
-            if self.server_ip:
-                oup_settext(self.gui, Check_BUTTON="Refresh")
-
-                server = JavaServer.lookup(self.server_ip)
-                status = server.status()
-                
-                status_desc = str(status.description)
-                for _ in format_code:
-                    status_desc = str(status_desc).replace(_, "")
-                status_desc = status_desc.replace("  ", "")
-
-                oup_settext(
-                    self.gui,
-                    Check_BUTTON="Refresh",
-                    Status_DISPLAY="Online",
-                    Players_DISPLAY=f"{status.players.online}/{status.players.max}",
-                    Ping_DISPLAY=f"{round(status.latency)} ms",
-                    Software_DISPLAY=str(status.version.name),
-                    MOTD_DISPLAY=status_desc)
-                
-                if autoupdate_enabled and not self.thread_running:
-                    self.thread_running = True
-                    self.autoupdate_thread.start()
-                    
-                elif not autoupdate_enabled and self.thread_running:
-                    self.thread_running = False
-                    self.autoupdate_thread.join(0.5)
-                    self.autoupdate_thread = self.generate_thread()
-                    self.autoupdate_thread.daemon = True
-                
-            else:
+            if not self.server_ip:
                 self.reset()
                 oup_displaymessage(
                     title="Server IP field Empty", 
                     message="The Server IP field is empty",
                     icon=oup_Icon["Information"],
                     windowicon="./mc_icon.png")
+                
+            oup_settext(self.gui, Check_BUTTON="Refresh")
+
+            server = JavaServer.lookup(self.server_ip)
+            status = server.status()
+            
+            status_desc = str(status.description)
+            for _ in format_code:
+                status_desc = str(status_desc).replace(_, "")
+            status_desc = status_desc.replace("  ", "")
+
+            oup_settext(
+                self.gui,
+                Check_BUTTON="Refresh",
+                Status_DISPLAY="Online",
+                Players_DISPLAY=f"{status.players.online}/{status.players.max}",
+                Ping_DISPLAY=f"{round(status.latency)} ms",
+                Software_DISPLAY=str(status.version.name),
+                MOTD_DISPLAY=status_desc)
+            
+            if autoupdate_enabled and not self.thread_running:
+                self.thread_running = True
+                self.autoupdate_thread.start()
+                
+            elif not autoupdate_enabled and self.thread_running:
+                self.thread_running = False
+                self.autoupdate_thread.join(0.5)
+                self.autoupdate_thread = self.generate_thread()
+                self.autoupdate_thread.daemon = True
 
         #No Response
         except NoResponse:
