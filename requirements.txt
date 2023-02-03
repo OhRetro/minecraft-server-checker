@@ -1,4 +1,3 @@
-mcstatus==9.0.4
-PyQt5==5.15.7
-oreto-utils==0.8
-rich==12.4.4
+mcstatus==10.0.1
+PyQt5==5.15.8
+rich==13.3.1
