@@ -1,13 +1,7 @@
-#Minecraft Server Checker
-VERSION:list = [2.3, "Stable"]
-
-#Imports
 from sys import argv as sys_argv
 from socket import gaierror as InvalidMinecraftServerIp
 from socket import timeout as NoResponse
 from webbrowser import open as wb_open
-from requests import get as re_get
-from requests.exceptions import ConnectionError
 from traceback import format_exc as tb_format_exc
 from time import sleep as t_sleep
 from threading import Thread as th_Thread
@@ -25,16 +19,16 @@ except ImportError:
     print("[!] Please try running \"pip install -r requirements.txt\"")
     exit(1)
 
-format_code = ["§4", "§c", "§6", "§e", "§2", "§a", "§b", "§3", "§1", "§9", "§5", "§7", "§8", "§d", "§f", "§0", "§k", "§l", "§m", "§n", "§o", "§r"]
+version = "2.2.1"
+format_code = ["§4", "§c", "§6", "§e", "§2", "§a", "§b", "§3", "§1", "§9", "§5", "§7", "§8", "§d", "§f", "§0", "§k", "§l", "§m", "§n", "§o", "§r", "§"]
 
-#Minecraft Server Checker
 class MCServerChecker(QWidget):
     def __init__(self):
         super().__init__()
         self.gui = uic.loadUi("./main.ui", self)
         oup_settext(
             self.gui,
-            Version_TEXT=f"v{VERSION[0]}")
+            Version_TEXT=f"v{version}")
 
         self.autoupdate_thread = self.generate_thread()
         self.autoupdate_thread.daemon = True
@@ -44,18 +38,6 @@ class MCServerChecker(QWidget):
         oup_bindbutton(self.gui, "About_BUTTON", self.about)        
 
         self.gui.show()
-     
-        try:
-            self.checkupdates()
-        except ConnectionError as e:
-            oup_displaymessage(
-                title="No Internet",
-                message="Looks like you're without internet!",
-                detailed=str(e),
-                icon=oup_Icon["Critical"],
-                buttons=(oup_Button["Ok"]),
-                windowicon="./mc_icon.png"
-            )
             
     #Generate a new thread for autoping
     def generate_thread(self):
@@ -71,7 +53,7 @@ class MCServerChecker(QWidget):
             MOTD_TEXT="MOTD: (AUTO-UPDATING)",
             )
         try:
-            for _ in range(99999):
+            for _ in range(9999999):
                 if not self.thread_running: 
                     break
                 server = JavaServer.lookup(self.server_ip)
@@ -88,7 +70,7 @@ class MCServerChecker(QWidget):
                     Ping_DISPLAY=f"{round(status.latency)} ms",
                     MOTD_DISPLAY=status_desc)
                     
-                t_sleep(0.5)
+                t_sleep(1)
                 
         except TimeoutError:
             oup_displaymessage(
@@ -126,7 +108,6 @@ class MCServerChecker(QWidget):
                     
     #Check Server
     def checkserver(self):
-        global format_code
         autoupdate_enabled = self.gui.AutoUpdate_TOGGLE.isChecked()
         try:
             self.server_ip = self.gui.IP_DISPLAY.text()
@@ -144,10 +125,9 @@ class MCServerChecker(QWidget):
             server = JavaServer.lookup(self.server_ip)
             status = server.status()
             
-            status_desc = str(status.description)
+            status_desc = status.description.replace("  ", "")
             for _ in format_code:
-                status_desc = str(status_desc).replace(_, "")
-            status_desc = status_desc.replace("  ", "")
+                status_desc = status_desc.replace(_, "")
 
             oup_settext(
                 self.gui,
@@ -220,7 +200,7 @@ class MCServerChecker(QWidget):
     def about(self):
         response = oup_displaymessage(
             title="About Minecraft Server Checker",
-            message=f"Minecraft Version Checker v{VERSION[0]} | {VERSION[1]}; Created by OhRetro", 
+            message=f"Minecraft Server Checker v{version}; Created by OhRetro", 
             informative="Do you want to open the program's repository on github?",
             icon=oup_Icon["Question"],
             buttons= (oup_Button["Yes"] | oup_Button["No"]),
@@ -229,26 +209,6 @@ class MCServerChecker(QWidget):
 
         if response == oup_Button["Yes"]:
             wb_open("https://github.com/OhRetro/Minecraft-Server-Checker")
-
-    #Check for updates
-    def checkupdates(self):
-        response = re_get("https://api.github.com/repos/OhRetro/Minecraft-Server-Checker/releases/latest")
-        tag_name = response.json()["tag_name"]
-        latest =  int(tag_name.replace("v", ""))
-        
-        if VERSION[0] < latest:
-            oup_settext(self.gui, Version_TEXT=f"v{VERSION[0]} | Update Available, Newer Version: {tag_name}")
-            response = oup_displaymessage(
-                title="Update Available",
-                message=f"Update {tag_name} is Available! do you want to download it?",
-                informative="You can download it from the program's repository on github.",
-                icon=oup_Icon["Information"],
-                buttons=(oup_Button["Yes"] | oup_Button["No"]),
-                windowicon="./mc_icon.png"
-                )
-
-            if response == oup_Button["Yes"]:
-                wb_open("https://github.com/OhRetro/Minecraft-Server-Checker/releases/latest")
             
 if __name__ == "__main__":
     try:
