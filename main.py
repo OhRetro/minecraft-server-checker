@@ -1,4 +1,4 @@
-from sys import argv as sys_argv
+from sys import argv as sys_argv, exit
 from socket import gaierror as InvalidMinecraftServerIp
 from socket import timeout as NoResponse
 from webbrowser import open as wb_open
@@ -111,20 +111,21 @@ class MCServerChecker(QWidget):
         autoupdate_enabled = self.gui.AutoUpdate_TOGGLE.isChecked()
         try:
             self.server_ip = self.gui.IP_DISPLAY.text()
-            
-            if not self.server_ip:
+
+            if not list(self.server_ip):
                 self.reset()
                 oup_displaymessage(
                     title="Server IP field Empty", 
                     message="The Server IP field is empty",
                     icon=oup_Icon["Information"],
                     windowicon="./mc_icon.png")
-                
+                return
+
             oup_settext(self.gui, Check_BUTTON="Refresh")
 
             server = JavaServer.lookup(self.server_ip)
             status = server.status()
-            
+
             status_desc = status.description.replace("  ", "")
             for _ in format_code:
                 status_desc = status_desc.replace(_, "")
@@ -137,18 +138,17 @@ class MCServerChecker(QWidget):
                 Ping_DISPLAY=f"{round(status.latency)} ms",
                 Software_DISPLAY=str(status.version.name),
                 MOTD_DISPLAY=status_desc)
-            
+
             if autoupdate_enabled and not self.thread_running:
                 self.thread_running = True
                 self.autoupdate_thread.start()
-                
+
             elif not autoupdate_enabled and self.thread_running:
                 self.thread_running = False
                 self.autoupdate_thread.join(0.5)
                 self.autoupdate_thread = self.generate_thread()
                 self.autoupdate_thread.daemon = True
 
-        #No Response
         except NoResponse:
             self.reset()
             oup_settext(
@@ -156,7 +156,6 @@ class MCServerChecker(QWidget):
                 Check_BUTTON="Refresh",
                 Status_DISPLAY="Offline")
 
-        #Invalid IP Address
         except InvalidMinecraftServerIp:
             self.reset()
             oup_displaymessage(
@@ -165,7 +164,6 @@ class MCServerChecker(QWidget):
                 icon=oup_Icon["Information"],
                 windowicon="./mc_icon.png")
 
-        #Connection Refused
         except ConnectionRefusedError:
             self.reset()
             oup_displaymessage(
@@ -174,7 +172,6 @@ class MCServerChecker(QWidget):
                 icon=oup_Icon["Information"],
                 windowicon="./mc_icon.png")
 
-        #Others
         except Exception as error:
             self.reset()
             oup_displaymessage(
