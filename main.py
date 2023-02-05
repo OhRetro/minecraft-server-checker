@@ -11,21 +11,23 @@ try:
     from mcstatus import JavaServer
     from PyQt5 import uic
     from PyQt5.QtWidgets import QApplication, QWidget
-    from pyqt5_utils import displaymessage as oup_displaymessage, settext as oup_settext
-    from pyqt5_utils import bindbutton as oup_bindbutton, Icon as oup_Icon, Button as oup_Button
-
+    from utils.pyqt5 import displaymessage as oup_displaymessage, settext as oup_settext
+    from utils.pyqt5 import bindbutton as oup_bindbutton, Icon as oup_Icon, Button as oup_Button
+    from utils.display_message import critical_auto_update
+    
 except ImportError:
     print(tb_format_exc())
     print("[!] Please try running \"pip install -r requirements.txt\"")
     exit(1)
 
-version = "2.2.1"
-format_code = ["§4", "§c", "§6", "§e", "§2", "§a", "§b", "§3", "§1", "§9", "§5", "§7", "§8", "§d", "§f", "§0", "§k", "§l", "§m", "§n", "§o", "§r", "§"]
+version = "2.2.2"
+format_code = ["§4", "§c", "§6", "§e", "§2", "§a", "§b", "§3", "§1", "§9", "§5", "§7", "§8", "§d", "§f", "§0", "§k", "§l", "§m", "§n", "§o", "§r"]
 
 class MCServerChecker(QWidget):
     def __init__(self):
         super().__init__()
         self.gui = uic.loadUi("./main.ui", self)
+        
         oup_settext(
             self.gui,
             Version_TEXT=f"v{version}")
@@ -38,7 +40,30 @@ class MCServerChecker(QWidget):
         oup_bindbutton(self.gui, "About_BUTTON", self.about)        
 
         self.gui.show()
-            
+    
+    def getserverinfo(self):
+        server = JavaServer.lookup(self.server_ip)
+        status = server.status()
+
+        status_desc = status.description.replace("  ", "")
+        for _ in format_code:
+            status_desc = status_desc.replace(_, "")
+
+        oup_settext(
+            self.gui,
+            Check_BUTTON="Refresh",
+            Status_DISPLAY="Online",
+            Players_DISPLAY=f"{status.players.online}/{status.players.max}",
+            Ping_DISPLAY=f"{round(status.latency)} ms",
+            Software_DISPLAY=str(status.version.name),
+            MOTD_DISPLAY=status_desc)
+
+    #nocom
+    def autoupdate_error_message(self, title, message, detailed):
+        critical_auto_update(title, message, detailed)
+        self.gui.AutoUpdate_TOGGLE.setChecked(False)
+        self.thread_running = False
+        
     #Generate a new thread for autoping
     def generate_thread(self):
         return th_Thread(target=self.autoupdate)
@@ -56,48 +81,20 @@ class MCServerChecker(QWidget):
             for _ in range(9999999):
                 if not self.thread_running: 
                     break
-                server = JavaServer.lookup(self.server_ip)
-                status = server.status()
-
-                status_desc = str(status.description)
-                for _ in format_code:
-                    status_desc = str(status_desc).replace(_, "")
-                status_desc = status_desc.replace("  ", "")
-
-                oup_settext(
-                    self.gui,
-                    Players_DISPLAY=f"{status.players.online}/{status.players.max}",
-                    Ping_DISPLAY=f"{round(status.latency)} ms",
-                    MOTD_DISPLAY=status_desc)
+                
+                self.getserverinfo()
                     
                 t_sleep(1)
                 
         except TimeoutError:
-            oup_displaymessage(
-                title="Timeout Error", 
-                message="A Timeout Error Occured, It's happened because of the server's latency.\nNo need to worry, it's not your fault.",
-                informative="\"Auto Update\" has been deactivated.\nYou can activate it again by clicking the \"Auto Update\" button.", 
-                detailed=tb_format_exc(), 
-                icon=oup_Icon["Critical"],
-                buttons=(oup_Button["Ok"]),
-                windowicon="./mc_icon.png"
-                )
-            self.gui.AutoUpdate_TOGGLE.setChecked(False)
-            self.thread_running = False
+            title="Timeout Error", 
+            message="A Timeout Error Occured, It's happened because of the server's latency.\nNo need to worry, it's not your fault.",
+            self.autoupdate_error_message(title, message, tb_format_exc())
             
         except Exception:
-            print(tb_format_exc())
-            oup_displaymessage(
-                title="Something went wrong", 
-                message="Something else went wrong.",
-                informative="\"Auto Update\" has been deactivated.\nYou can activate it again by clicking the \"Auto Update\" button.", 
-                detailed=tb_format_exc(),
-                icon=oup_Icon["Critical"],
-                buttons=(oup_Button["Ok"]),
-                windowicon="./mc_icon.png"
-                )
-            self.gui.AutoUpdate_TOGGLE.setChecked(False)
-            self.thread_running = False
+            title="Something went wrong", 
+            message="Something else went wrong.",
+            self.autoupdate_error_message(title, message, tb_format_exc())
             
         oup_settext(
             self.gui,
@@ -123,21 +120,7 @@ class MCServerChecker(QWidget):
 
             oup_settext(self.gui, Check_BUTTON="Refresh")
 
-            server = JavaServer.lookup(self.server_ip)
-            status = server.status()
-
-            status_desc = status.description.replace("  ", "")
-            for _ in format_code:
-                status_desc = status_desc.replace(_, "")
-
-            oup_settext(
-                self.gui,
-                Check_BUTTON="Refresh",
-                Status_DISPLAY="Online",
-                Players_DISPLAY=f"{status.players.online}/{status.players.max}",
-                Ping_DISPLAY=f"{round(status.latency)} ms",
-                Software_DISPLAY=str(status.version.name),
-                MOTD_DISPLAY=status_desc)
+            self.getserverinfo()
 
             if autoupdate_enabled and not self.thread_running:
                 self.thread_running = True
